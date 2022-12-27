@@ -6,6 +6,14 @@ def accept_response(message):
     print("Thank you! Closing connection")
     connection.shutdown(0)
 
+def send_request(message):
+    try:
+        connection.send(message.encode())
+        response = connection.recv(1024).decode()
+        accept_response(response)
+    except ConnectionResetError:
+        print("Connection Reset Error, server likely got terminated.")
+        exit(1)
 
 # Establishing a connection to the server
 host = "localhost"
@@ -35,18 +43,14 @@ if choice == "C":
         print("Not a valid answer, defaulting to None.")
         contract = "O"
     request = " ".join((choice, contract))
-    connection.send(request.encode())
-    response = connection.recv(1024).decode()
-    accept_response(response)
+    send_request(request)
 
 elif choice == "D":
     input_id = input("What's the card's ID? ")
     deposit = input("How much money would you like to deposit?  $")
     if deposit.isnumeric() and 0 < int(deposit) <= MAX_DEPOSIT:
         request = " ".join((choice, input_id, deposit))
-        connection.send(request.encode())
-        response = connection.recv(1024).decode()
-        accept_response(response)
+        send_request(request)
     else:
         print(f"Invalid deposit amount, must be a whole number and not more than {MAX_DEPOSIT}.")
         exit(1)
@@ -56,9 +60,7 @@ elif choice == "E":
     new_contract = input("What contract would you like to change to? (N)orth, (C)enter, (S)outh, N(O)ne. : ").upper()
     if new_contract in CONTRACT_LIST:
         request = " ".join((choice, input_id, new_contract))
-        connection.send(request.encode())
-        response = connection.recv(1024).decode()
-        accept_response(response)
+        send_request(request)
     else:
         print(f"Invalid contract area.")
         exit(1)
@@ -68,9 +70,7 @@ elif choice == "P":
     area = input("What area are you traveling in? (N)orth, (C)enter, or (S)outh? ").upper()
     if area in ("N", "C", "S"):     # Can't travel in "None", so areas are specified.
         request = " ".join((choice, input_id, area))
-        connection.send(request.encode())
-        response = connection.recv(1024).decode()
-        accept_response(response)
+        send_request(request)
     else:
         print(f"Invalid area.")
         exit(1)
