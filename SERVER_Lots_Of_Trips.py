@@ -107,7 +107,7 @@ def pay_for_a_ride(input_card_id, input_destination):
         conn.commit()
         updated_balance = get_card_balance(input_card_id)
         client.send(
-            f"Payment successfully! Your new balance is ${updated_balance[0]}. Have a nice ride!".encode())
+            f"Payment successful! Your new balance is ${updated_balance[0]}. Have a nice ride!".encode())
     else:
         client.send("Not enough money for this ride. Try depositing!".encode())
 

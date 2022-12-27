@@ -42,7 +42,7 @@ if choice == "C":
 elif choice == "D":
     input_id = input("What's the card's ID? ")
     deposit = input("How much money would you like to deposit?  $")
-    if deposit.isnumeric() and 0 < int(deposit) < MAX_DEPOSIT:
+    if deposit.isnumeric() and 0 < int(deposit) <= MAX_DEPOSIT:
         request = " ".join((choice, input_id, deposit))
         connection.send(request.encode())
         response = connection.recv(1024).decode()
